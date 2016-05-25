@@ -1,0 +1,11 @@
+version: '2'
+networks:
+  vhosts:
+    external: 
+      name: nginx_vhosts
+services:
+  chat:
+    build: .
+    networks:
+    - vhosts
+
