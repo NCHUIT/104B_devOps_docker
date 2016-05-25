@@ -199,7 +199,7 @@ ssh username@ip_or_hostname
 !SLIDE unclickable center x=-12000 y=-7000 scale=10
 
 %%%%%%%%%%%%%%%
-!SLIDE x=-12000 y=3000 scale=10
+!SLIDE x=-12000 y=-14000 scale=10
 
 ### 關於套件管理程式
 
@@ -213,7 +213,7 @@ ssh username@ip_or_hostname
     * Windows: [`choco`](https://chocolatey.org/)
 
 %%%%%%%%%%%%%%%
-!SLIDE x=-12000 y=3000 z=-12500 scale=10
+!SLIDE center x=-12000 y=-14000 z=-12500 scale=10
 
 ### for Programming languages
 
@@ -222,7 +222,7 @@ ssh username@ip_or_hostname
 * NodeJs: `npm`，通常伴隨 NodeJS 一同安裝
 * PHP: `composer`，和以上三者比較不同，[來這取得](https://getcomposer.org)
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+![npm-so-long](http://i.imgur.com/hwvxiO1.jpg)
 
 %%%%%%%%%%%%%%%
 !SLIDE center picture x=12000 y=-7000 scale=10
@@ -255,15 +255,248 @@ ssh username@ip_or_hostname
 ### Try `docker` / `docker run hello-world`
 
 %%%%%%%%%%%%%%%
-!SLIDE x=16300 y=-5500 scale=3
+!SLIDE x=16300 y=-5300 scale=3
 
-## 體驗一下它的威力
+### 體驗一下它的威力
 
 #### `docker run -it centos`
 
 #### `docker run -it node`
 
-#### `docker run [options] <image> [command]`
+#### `docker run [options] <image>[:version] [command]`
+
+#### [DockerHub](https://hub.docker.com/explore/)
+
+%%%%%%%%%%%%%%%
+!SLIDE center x=7700 y=-9500 scale=4
+
+![serious-pusheen](http://i.giphy.com/V2FgIJRv6Ykq4.gif)
+
+#### 來點認真的
+
+```
+git clone https://github.com/NCHUIT/104B_devOps_docker.git
+```
+
+#### 接下來各位會在 `practice` 內操作
+
+%%%%%%%%%%%%%%%
+!SLIDE x=7700 y=-8000 scale=3
+
+## 來架個 [聊天室 Chat](http://socket.io/demos/chat/)
+
+1. [Node on Dockerhub](https://hub.docker.com/_/node/) 
+2. 建立 `Dockerfile`, [Docs](https://docs.docker.com/engine/reference/builder/)
+3. `docker build -t chat .` (`docker build --help` to see more)
+4. `docker run -p 80:3000 chat`
+
+%%%%%%%%%%%%%%%
+!SLIDE x=7700 y=-6800 scale=4
+
+## 一些其他的 docker 指令
+
+%%%%%%%%%%%%%%%
+!SLIDE x=7700 y=-6500 scale=3
+
+## 看 Docker 是不是好的
+
+#### `docker info`
+
+%%%%%%%%%%%%%%%
+!SLIDE x=7700 y=-5500 scale=3
+
+### Containers / Image
+
+* `exec` / `run` 的差異
+* containers:
+    * `docker ps [-l]`
+    * `docker kill <container>`
+    * `docker rm <container>`
+    * `docker commit <container> <new_image>`
+* images:
+    * `docker images`
+    * `docker rmi <image>`
+
+%%%%%%%%%%%%%%%
+!SLIDE x=9000 y=-5500 scale=3
+
+### / Resource
+
+* resources:
+    * `docker network ...`
+    * `docker volume ...`
+
+%%%%%%%%%%%%%%%
+!SLIDE unclickable x=12000 y=-7000 scale=10
+
+%%%%%%%%%%%%%%%
+!SLIDE picture center x=-12000 y=3000 scale=10
+
+![docker-compose](http://i.imgur.com/QY7Mav1.png)
+
+### Docker-compose
+
+#### 使用 Docker 的好幫手
+
+%%%%%%%%%%%%%%%
+!SLIDE x=-7700 y=500 scale=4
+
+## Installation
+
+#### [Official Installation Guide](https://docs.docker.com/compose/install/)
+
+%%%%%%%%%%%%%%%
+!SLIDE x=-7700 y=1750 scale=3
+
+### 讓 Chat 更容易地使用吧
+
+#### 建立 `docker-compose.yml`, 要用就用新版吧 (2):
+
+```
+version: '2'
+services:
+  services_1:
+    ...設定值...
+```
+
+#### [頗多頗複雜的文件](https://docs.docker.com/compose/compose-file/)
+
+#### `docker-compose up chat`
+
+%%%%%%%%%%%%%%%
+!SLIDE x=-7700 y=4000 scale=3
+
+### Docker-compose 大致使用流程
+
+1. `docker-compose config`, 確保 `docker-compose.yml` 是好der
+2. `build`
+3. `up [service]` / `run <service>`
+4. `logs`
+5. `ps` / `kill [service]` / `rm [-avf]`
+
+%%%%%%%%%%%%%%%
+!SLIDE center picture x=-16300 y=1500 scale=4
+
+![wordpress](http://i.imgur.com/Chf2yZ7.png)
+
+### 用 Docker 架設 Wordpress
+
+%%%%%%%%%%%%%%%
+!SLIDE x=-16300 y=2200 scale=3
+
+## [Dockerhub 上面可是有的](https://hub.docker.com/_/wordpress/)
+
+#### Wordpress 會用到 mysql (mariadb), docker-compose 就很有用了
+
+#### `docker-compose up [-d] wordpress`
+
+%%%%%%%%%%%%%%%
+!SLIDE x=-16300 y=3000 scale=3
+
+## 來做個資料庫備份吧
+
+#### 直接在 `docker-compose` 裡頭加上兩個 one-off command service
+
+#### 需要把 container 跟 host 檔案系統打通，透過 `volumes`
+
+%%%%%%%%%%%%%%%
+!SLIDE x=-16300 y=3900 scale=3
+
+## `command` / `entrypoint` 差異
+
+#### `docker-compose run <service> [command_or_args]` 的 `[command_or_args]` 會接在 `entrypoint` 之後
+
+%%%%%%%%%%%%%%%
+!SLIDE unclickable x=-12000 y=3000 scale=10
+
+%%%%%%%%%%%%%%%
+!SLIDE center picture center x=12000 y=3000 scale=10
+
+![nginx](http://i.imgur.com/UYHOARe.png)
+
+### Nginx
+
+#### 來幫我們做 vhost
+
+%%%%%%%%%%%%%%%
+!SLIDE x=16300 y=1500 scale=4
+
+### 我們來用 docker 來跑 nginx 吧XDD
+
+1. [Nginx on dockerhub](https://hub.docker.com/_/nginx/)
+2. 先來個 one-off service 把 `conf.d` 複製出來
+3. 用 `volumes` 把 `conf.d` 內外打通
+4. `docker-compose up nginx`
+
+%%%%%%%%%%%%%%%
+!SLIDE x=16300 y=4500 scale=4
+
+### 建立我們自己的 vhost
+
+* 建立我們的靜態網站 `web` 資料夾，並且打通內外打通
+* 複製 nginx 的 `default.conf` 來改
+  * `listen <port> [default_server]`
+  * `server_name <vhost_domain>`
+  * `location` => `root`, `index`, `deny`
+* 寫一個測試用的 one-off service `test`: `command: nginx -t`
+* `docker-compose up nginx`
+
+%%%%%%%%%%%%%%%
+!SLIDE center picture x=7700 y=1500 scale=4
+
+### 把 chat / wordpress 跟 nginx 串在一起
+
+* 利用 `docker network` 以及 nginx 的 `reverse-proxy`
+* [我們自己建立 network 讓 docker-compose 來使用](https://docs.docker.com/compose/networking/#using-a-pre-existing-network)
+* 繼續複製 `default.conf` 來改
+
+![apache-behind-nginx](http://i.imgur.com/iJfhQ1P.jpg)
+
+%%%%%%%%%%%%%%%
+!SLIDE center picture slide x=7700 y=1500 z=-5000 scale=3
+
+### Proxy pass settings
+
+```
+# For websocket
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection "upgrade";
+
+# Wordpress required headers
+proxy_set_header X-Real-IP  $remote_addr;
+proxy_set_header X-Forwarded-For $remote_addr;
+proxy_set_header Host $host;
+proxy_redirect off;
+
+# Reverse-proxy
+proxy_pass http://<the_magic_service_name>[:port];
+```
+
+%%%%%%%%%%%%%%%
+!SLIDE center picture x=7700 y=4500 scale=4
+
+### 啟動！
+
+#### `cd chat; docker-compose up -d chat; cd ..`
+
+#### `cd wordpress; docker-compose up -d wordpress; cd ..`
+
+#### `cd nginx; docker-compose up -d nginx; cd ..`
+
+![goooo](http://i.giphy.com/ZJyn5HEzW7THO.gif)
+
+%%%%%%%%%%%%%%%
+!SLIDE unclickable x=12000 y=3000 scale=10
+
+%%%%%%%%%%%%%%%
+!SLIDE center picture x=0 y=7000 scale=10
+
+### 感謝大家，大家辛苦惹:w
+
+#### 快速連結： [DevOps of Linux (Debian)](#/step-7) / [Docker](#/step-25) / [docker-compose](#/step-37) / [Nginx](#/step-46)
+
+![nyan](http://i.giphy.com/Fo2s6HabbWVna.gif)
 
 %% The End
 %%%%%%%%%%%%%%%
