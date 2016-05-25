@@ -255,15 +255,28 @@ ssh username@ip_or_hostname
 ### Try `docker` / `docker run hello-world`
 
 %%%%%%%%%%%%%%%
-!SLIDE x=16300 y=-5500 scale=3
+!SLIDE x=16300 y=-5300 scale=3
 
-## 體驗一下它的威力
+### 體驗一下它的威力
 
 #### `docker run -it centos`
 
 #### `docker run -it node`
 
-#### `docker run [options] <image> [command]`
+#### `docker run [options] <image>[:version] [command]`
+
+#### [DockerHub](https://hub.docker.com/explore/)
+
+%%%%%%%%%%%%%%%
+!SLIDE x=7700 y=-9500 scale=4
+
+## 來點認真的
+
+```
+git clone https://github.com/NCHUIT/104B_devOps_docker.git
+```
+
+#### 接下來各位會在 `practice` 內操作
 
 %% The End
 %%%%%%%%%%%%%%%
