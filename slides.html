@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1024">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>DevOps & Docker with Nginx | by PastLeo</title>
+
+    <meta name="generator" content="Slide Show (S9)">
+    <meta name="author" content="PastLeo">
+
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:700' rel='stylesheet' type='text/css'>
+    <style>
+        h1,h2,h3,h4,h5,h6{
+            text-align: center;
+        }
+
+        /*loading style, title and author*/
+        div#loading{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transition: opacity 1s;
+
+            background: rgb(21, 21, 21);
+        }
+        div#loading h1{
+            margin: 0;
+            padding-top: 80px;
+            padding-bottom: 20px;
+
+            background: rgb(53, 53, 53);
+            border-bottom: #8ADFFF solid 3px;
+            color: rgb(152, 255, 189);
+        }
+        div#loading h3{
+            margin: 0;
+            padding-top: 20px;
+            padding-bottom: 20px;
+
+            background: rgb(72, 84, 66);
+            color: rgba(255, 179, 94, 1);
+        }
+        div#loading.done{
+            opacity:0;
+        }
+
+        div#loading .spinner {
+            -webkit-animation: rotation 1.4s linear infinite;
+            animation: rotation 1.4s linear infinite;
+            stroke: rgba(0, 149, 207, 1);
+            margin-left: auto;
+            display: block;
+            margin-right: auto;
+            margin-top: 10%;
+        }
+        @-webkit-keyframes rotation {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(270deg);
+                transform: rotate(270deg);
+            }
+        }
+        @keyframes rotation {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+            100% {
+                -webkit-transform: rotate(270deg);
+                transform: rotate(270deg);
+            }
+        }
+        div#loading .spinner .circle {
+            stroke-dasharray: 187;
+            stroke-dashoffset: 0;
+            -webkit-transform-origin: center;
+            -ms-transform-origin: center;
+            transform-origin: center;
+            -webkit-animation: turn 1.4s ease-in-out infinite;
+            animation: turn 1.4s ease-in-out infinite;
+        }
+        @-webkit-keyframes turn {
+            0% {
+                stroke-dashoffset: 187;
+            }
+            50% {
+                stroke-dashoffset: 46.75;
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+            }
+            100% {
+                stroke-dashoffset: 187;
+                -webkit-transform: rotate(450deg);
+                transform: rotate(450deg);
+            }
+        }
+        @keyframes turn {
+            0% {
+                stroke-dashoffset: 187;
+            }
+            50% {
+                stroke-dashoffset: 46.75;
+                -webkit-transform: rotate(135deg);
+                transform: rotate(135deg);
+            }
+            100% {
+                stroke-dashoffset: 187;
+                -webkit-transform: rotate(450deg);
+                transform: rotate(450deg);
+            }
+        }
+
+        /*the background*/
+        body {
+            background: #545454; /* Old browsers */
+            background: -moz-radial-gradient(center, ellipse cover,  #545454 0%, #262626 100%); /* FF3.6+ */
+            background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#545454), color-stop(100%,#262626)); /* Chrome,Safari4+ */
+            background: -webkit-radial-gradient(center, ellipse cover,  #545454 0%,#262626 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-radial-gradient(center, ellipse cover,  #545454 0%,#262626 100%); /* Opera 12+ */
+            background: -ms-radial-gradient(center, ellipse cover,  #545454 0%,#262626 100%); /* IE10+ */
+            background: radial-gradient(ellipse at center,  #545454 0%,#262626 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#545454', endColorstr='#262626',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /*normal step*/
+        .step {
+          color:rgb(152, 255, 189);
+          width: 1024px;
+          height: 576px;
+          padding: 40px 60px;
+
+          font-size: 32px;
+
+          opacity: 0.9;
+          line-height: 1.6;
+
+          transition: all 0.5s ease 0s;
+        }
+
+        .step.future {
+          opacity: 0;
+          pointer-events:none;
+        }
+
+        .step.active {
+          opacity: 1;
+          text-shadow: 0px 0px 20px black;
+        }
+
+        .step.present {
+            z-index: 100;
+        }
+
+        /*markdown elements*/
+        h2{
+            margin-top: 20%;
+            margin-bottom: 10px;
+        }
+
+        h4{
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        pre {
+            background-color: rgba(56, 186, 112, 1);
+            padding: 15px;
+            overflow: auto;
+        }
+
+        code {
+            background-color: rgba(56, 186, 112, 0.82);
+            color: #D1CABC;
+            border-radius: 10px;
+            padding: 7px;
+            font-family: "Consolas","Montserrat",sans-serif;
+        }
+
+        blockquote {
+            margin: 0px;
+            padding-left: 40px;
+            border-left: 10px solid #000;
+            color: rgba(105, 105, 105, 1)
+        }
+
+        blockquote blockquote{
+            border: none;
+        }
+
+        blockquote p{
+            margin: 0;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        ul {
+            padding-left: 1.75em;
+            margin: 0px 0px 20px;
+        }
+
+        a {
+            color: rgba(0, 149, 207, 1);
+        }
+
+        strong {
+            color: rgba(255, 179, 94, 1);
+        }
+
+        /*controls*/
+
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+
+        .arrow {
+            width: 0px;
+            height: 0px;
+            border: 30px solid rgba(153, 186, 213, 0.5);
+            float: left;
+            margin-right: 30px;
+            -moz-user-select: none;
+        }
+
+        .prev {
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            border-left-color: transparent;
+            border-left-width: 0px;
+            border-right-width: 50px;
+        }
+
+        .prev:hover {
+            border-right-color: rgba(194, 217, 225, 1);
+            cursor: pointer;
+        }
+
+        .next {
+            border-top-color: transparent;
+            border-bottom-color: transparent;
+            border-right-color: transparent;
+            border-left-width: 50px;
+            border-right-width: 0px;
+        }
+
+        .next:hover{
+            border-left-color: rgba(194, 217, 225, 1);
+            cursor: pointer;
+        }
+
+        /* customization options of steps*/
+
+        .slide {
+            background: #383838;
+            border: black solid 1px;
+            border-radius: 10px;
+            overflow: auto;
+        }
+        .slide.active {
+            box-shadow: rgba(255, 255, 255, 0.5) 0px 0px 10px;
+        }
+
+        .step.unclickable {
+            pointer-events:none;
+        }
+
+        .step.center p {
+            text-align: center;
+        }
+
+        .step.showOnlyWhenPresent {
+            opacity: 0;
+            pointer-events:none;
+        }
+
+        .step.showOnlyWhenPresent.present {
+            opacity: 1;
+            pointer-events:default;
+        }
+
+        .step.picture img{
+            max-height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        .step.slogen h2{
+            margin-top: 15%;
+            font-size: 1.9em;
+        }
+
+        
+.bg-when-present.active {
+    background: rgba(59, 65, 62, 0.85);
+    border-radius: 10px;
+}
+
+
+    </style>
+</head>
+
+<body class="impress-not-supported">
+
+<div id="impress">
+
+    <!-- note: assumes no header (breaking slides w/ SLIDE directive) -->
+
+    <div class='step ' data-x='0' data-y='0' data-scale='10' >
+      <!-- === begin markdown block ===
+
+      generated by markdown/1.2.0 on Ruby 2.2.4 (2015-12-16) [x86_64-linux]
+                on 2016-05-25 06:34:24 +0000 with Markdown engine kramdown (1.11.1)
+                  using options {}
+  -->
+
+<!-- _S9SLIDE_  x=0 y=0 scale=10 -->
+
+<h2 id="devops--docker-with-nginx">DevOps &amp; Docker with Nginx</h2>
+
+<h4 id="pastleo--nchuit">PastLeo @ NCHUIT</h4>
+
+
+    </div>
+
+    <div class='step center picture' data-x='0' data-y='-7000' data-scale='10' >
+      <!-- _S9SLIDE_  center picture x=0 y=-7000 scale=10 -->
+
+<h3 id="section">先來暖個身，補充一下一些東西</h3>
+
+<p><img src="http://i.giphy.com/CYtgfH4vQfmdq.gif" alt="exercise" /></p>
+
+
+    </div>
+
+    <div class='step ' data-x='-3000' data-y='-4750' data-scale='2' >
+      <!-- _S9SLIDE_  x=-3000 y=-4750 scale=2 -->
+
+<h3 id="section-1">首先打開終端機</h3>
+
+<h4 id="linux-terminal">Linux Terminal</h4>
+
+<h4 id="ssh--putty-">SSH / Putty 來連上伺服器</h4>
+
+<pre><code>ssh username@ip_or_hostname
+</code></pre>
+
+
+    </div>
+
+    <div class='step ' data-x='0' data-y='-4750' data-scale='2' >
+      <!-- _S9SLIDE_  x=0 y=-4750 scale=2 -->
+
+<h2 id="which--path"><code>which</code> / <code>$PATH</code></h2>
+
+
+    </div>
+
+    <div class='step ' data-x='3000' data-y='-4750' data-scale='2' >
+      <!-- _S9SLIDE_  x=3000 y=-4750 scale=2 -->
+
+<h2 id="man----help">自救的能力 <code>man</code> / <code>--help</code></h2>
+
+
+    </div>
+
+    <div class='step unclickable' data-x='0' data-y='-7000' data-scale='10' >
+      <!-- _S9SLIDE_  unclickable x=0 y=-7000 scale=10 -->
+
+
+    </div>
+
+    <div class='step picture center' data-x='-12000' data-y='-7000' data-scale='10' >
+      <!-- _S9SLIDE_  picture center x=-12000 y=-7000 scale=10 -->
+
+<p><img src="http://i.imgur.com/KVVNpoJ.png" alt="Linux Penguin" /></p>
+
+<h4 id="linux">管理 Linux</h4>
+
+
+    </div>
+
+    <div class='step picture center' data-x='-7700' data-y='-9500' data-scale='4' >
+      <!-- _S9SLIDE_  picture center x=-7700 y=-9500 scale=4 -->
+
+<p><img src="http://i.stack.imgur.com/m1rI9.png" alt="funny-sudo" /></p>
+
+<h3 id="section-2">權限管理</h3>
+
+
+    </div>
+
+    <div class='step ' data-x='-7700' data-y='-8500' data-scale='3' >
+      <!-- _S9SLIDE_  x=-7700 y=-8500 scale=3 -->
+
+<h2 id="section-3">超人身份</h2>
+
+<h4 id="su-user--sudo-command--sudo-su--visudo"><code>su &lt;user&gt;</code> / <code>sudo &lt;command&gt;</code> / <code>sudo su</code> / <code>visudo</code></h4>
+
+
+    </div>
+
+    <div class='step ' data-x='-7700' data-y='-8000' data-scale='3' >
+      <!-- _S9SLIDE_  x=-7700 y=-8000 scale=3 -->
+
+<h2 id="section-4">+人</h2>
+
+<h4 id="useradd-username--adduser-username"><code>useradd &lt;user_name&gt;</code> / <code>adduser &lt;user_name&gt;</code></h4>
+
+
+    </div>
+
+    <div class='step ' data-x='-7700' data-y='-7500' data-scale='3' >
+      <!-- _S9SLIDE_  x=-7700 y=-7500 scale=3 -->
+
+<h2 id="httplinuxvbirdorglinuxbasic0410accountmanagerphpusermod"><a href="http://linux.vbird.org/linux_basic/0410accountmanager.php#usermod">修改人(?</a></h2>
+
+<h4 id="usermod-option-username"><code>usermod &lt;option&gt; &lt;user_name&gt;</code></h4>
+
+<h4 id="usermod--ag-docker-username">把人加到群組裡面: <code>usermod -aG docker &lt;user_name&gt;</code></h4>
+
+
+    </div>
+
+    <div class='step picture center' data-x='-7700' data-y='-5500' data-scale='4' >
+      <!-- _S9SLIDE_  picture center x=-7700 y=-5500 scale=4 -->
+
+<p><img src="http://i.imgur.com/upsemfw.jpg" alt="funny-file-permission" /></p>
+
+<h3 id="section-5">檔案權限</h3>
+
+
+    </div>
+
+    <div class='step ' data-x='-7700' data-y='-4500' data-scale='3' >
+      <!-- _S9SLIDE_  x=-7700 y=-4500 scale=3 -->
+
+<h2 id="httplinuxvbirdorglinuxbasic0210filepermissionphpchown"><a href="http://linux.vbird.org/linux_basic/0210filepermission.php#chown">把東西送人</a></h2>
+
+<h4 id="chown--rv-usergroup-path"><code>chown [-Rv] &lt;user&gt;[:&lt;group&gt;] &lt;path&gt;</code></h4>
+
+
+    </div>
+
+    <div class='step ' data-x='-7700' data-y='-4000' data-scale='3' >
+      <!-- _S9SLIDE_  x=-7700 y=-4000 scale=3 -->
+
+<h2 id="httplinuxvbirdorglinuxbasic0210filepermissionphpchmod"><a href="http://linux.vbird.org/linux_basic/0210filepermission.php#chmod">誰可以做啥</a></h2>
+
+<h4 id="ls--l--drwxr-xr-x"><code>ls -l</code> =&gt; <code>drwxr-xr-x</code></h4>
+
+<h4 id="chmod--rv-mod-path"><code>chmod [-Rv] &lt;mod&gt; &lt;path&gt;</code></h4>
+
+
+    </div>
+
+    <div class='step picture center' data-x='-16300' data-y='-9500' data-scale='4' >
+      <!-- _S9SLIDE_  picture center x=-16300 y=-9500 scale=4 -->
+
+<p><img src="http://i.imgur.com/qZcM1SL.png" alt="htop" /></p>
+
+<h3 id="section-6">一些系統狀態</h3>
+
+
+    </div>
+
+    <div class='step ' data-x='-16300' data-y='-9350' data-scale='3' >
+      <!-- _S9SLIDE_  x=-16300 y=-9350 scale=3 -->
+
+<h2 id="section-7">工作管理員</h2>
+
+<h4 id="ps--ps--efaux--grep-program--morehttpwwwthegeekstuffcom201104ps-command-examples"><code>ps</code> / <code>ps &lt;-ef|aux&gt; | grep &lt;program&gt;</code> / <a href="http://www.thegeekstuff.com/2011/04/ps-command-examples/">more</a></h4>
+
+<h4 id="kill--9-pid--killall-program"><code>kill [-9] &lt;pid&gt;</code> / <code>killall &lt;program&gt;</code></h4>
+
+<h4 id="top--htop"><code>top</code> / <code>htop</code></h4>
+
+
+    </div>
+
+    <div class='step ' data-x='-16300' data-y='-8450' data-scale='3' >
+      <!-- _S9SLIDE_  x=-16300 y=-8450 scale=3 -->
+
+<h2 id="section-8">背景服務的控制</h2>
+
+<h4 id="systemctl-statusstartstopenabledisable-servicehttpluyakupixnetnetblogpost183362281-c65e88887c7e79a84e4b880e4ba9be5b7aee795b0e88887-systemctl-e79a84e4bb8be7b4b9"><a href="http://luyaku.pixnet.net/blog/post/183362281-c6.5%E8%88%87c7%E7%9A%84%E4%B8%80%E4%BA%9B%E5%B7%AE%E7%95%B0%E8%88%87-systemctl-%E7%9A%84%E4%BB%8B%E7%B4%B9"><code>systemctl [status|start|stop|enable|disable] &lt;service&gt;</code></a></h4>
+
+
+    </div>
+
+    <div class='step ' data-x='-16300' data-y='-7950' data-scale='3' >
+      <!-- _S9SLIDE_  x=-16300 y=-7950 scale=3 -->
+
+<h2 id="section-9">網路狀態</h2>
+
+<h4 id="ifconfig-ipconfig-on-windows"><code>ifconfig</code> (<code>ipconfig</code> on windows)</h4>
+
+<h4 id="port-netstat--tenlp">有哪些程式在監聽 Port: <code>netstat -tenlp</code></h4>
+
+
+    </div>
+
+    <div class='step picture center' data-x='-16300' data-y='-6000' data-scale='4' >
+      <!-- _S9SLIDE_  picture center x=-16300 y=-6000 scale=4 -->
+
+<p><img src="http://i.imgur.com/X3SNyeB.png" alt="apt-get-wife" /></p>
+
+<h3 id="for-ubuntu-and-debian">安裝軟體 (for ubuntu and debian)</h3>
+
+
+    </div>
+
+    <div class='step ' data-x='-16300' data-y='-5200' data-scale='3' >
+      <!-- _S9SLIDE_  x=-16300 y=-5200 scale=3 -->
+
+<h2 id="section-10">使用安裝包</h2>
+
+<h4 id="dpkg--i-foodeb--dpkg-usagehttpmaxubuntublogspottw201004dpkghtml"><code>dpkg -i foo.deb</code> / <a href="http://maxubuntu.blogspot.tw/2010/04/dpkg.html">dpkg usage</a></h4>
+
+<h4 id="section-11">到下張投影片你就會忘了這件事了</h4>
+
+
+    </div>
+
+    <div class='step ' data-x='-16300' data-y='-4500' data-scale='3' >
+      <!-- _S9SLIDE_  x=-16300 y=-4500 scale=3 -->
+
+<h2 id="apt-get-action-options"><code>apt-get &lt;action&gt; &lt;options&gt;</code></h2>
+
+<h4 id="apt-get-update"><code>apt-get update</code></h4>
+
+<h4 id="apt-get-cache-search--or-google--apt-get-instal-"><code>apt-get cache search ...</code> (or google) / <code>apt-get instal ...</code></h4>
+
+<h4 id="apt-get-remove-"><code>apt-get remove ...</code></h4>
+
+<h4 id="apt-get-upgrade-"><code>apt-get upgrade [...]</code></h4>
+
+
+    </div>
+
+    <div class='step unclickable center' data-x='-12000' data-y='-7000' data-scale='10' >
+      <!-- _S9SLIDE_  unclickable center x=-12000 y=-7000 scale=10 -->
+
+
+    </div>
+
+    <div class='step ' data-x='-12000' data-y='3000' data-scale='10' >
+      <!-- _S9SLIDE_  x=-12000 y=3000 scale=10 -->
+
+<h3 id="section-12">關於套件管理程式</h3>
+
+<h4 id="section-13">他們都大同小異，以下我把我所知道的列出來</h4>
+
+<ul>
+  <li>Linux systems:
+    <ul>
+      <li>ubuntu, debian: <code>apt-get</code> / <code>aptitude</code></li>
+      <li>centos, redhat: <code>yum</code></li>
+    </ul>
+  </li>
+  <li>3rd-party made for Non-Linux system:
+    <ul>
+      <li>OSX: <a href="http://brew.sh/"><code>brew</code></a></li>
+      <li>Windows: <a href="https://chocolatey.org/"><code>choco</code></a></li>
+    </ul>
+  </li>
+</ul>
+
+
+    </div>
+
+    <div class='step ' data-x='-12000' data-y='3000' data-z='-12500' data-scale='10' >
+      <!-- _S9SLIDE_  x=-12000 y=3000 z=-12500 scale=10 -->
+
+<h3 id="for-programming-languages">for Programming languages</h3>
+
+<ul>
+  <li>Python: <code>pip</code>，通常伴隨 Python 一同安裝</li>
+  <li>Ruby: <code>gem</code>，通常伴隨 Ruby 一同安裝</li>
+  <li>NodeJs: <code>npm</code>，通常伴隨 NodeJS 一同安裝</li>
+  <li>PHP: <code>composer</code>，和以上三者比較不同，<a href="https://getcomposer.org">來這取得</a></li>
+</ul>
+
+
+    </div>
+
+    <div class='step center picture' data-x='12000' data-y='-7000' data-scale='10' >
+      <!-- _S9SLIDE_  center picture x=12000 y=-7000 scale=10 -->
+
+<p><img src="http://i.imgur.com/afEjiqM.png" alt="docker" /></p>
+
+<h4 id="docker">Docker</h4>
+
+
+    </div>
+
+    <div class='step center picture' data-x='16300' data-y='-9500' data-scale='4' >
+      <!-- _S9SLIDE_  center picture x=16300 y=-9500 scale=4 -->
+
+<p><img src="http://i.imgur.com/cYCs6e0.jpg" alt="docker-in-vm" /></p>
+
+<h3 id="installation">Installation</h3>
+
+
+    </div>
+
+    <div class='step ' data-x='16300' data-y='-8200' data-scale='3' >
+      <!-- _S9SLIDE_  x=16300 y=-8200 scale=3 -->
+
+<h2 id="httpsgetdockercomhttpsgetdockercom"><a href="https://get.docker.com/">https://get.docker.com/</a></h2>
+
+<h4 id="httpsdocsdockercomengineinstallation"><a href="https://docs.docker.com/engine/installation/">其他作業系統</a></h4>
+
+<h4 id="docker--client-server--osx--windows--client">Docker 是 client-server 的，在 OSX 跟 Windows 上只有 client</h4>
+
+
+    </div>
+
+    <div class='step center picture' data-x='16300' data-y='-6500' data-scale='4' >
+      <!-- _S9SLIDE_  center picture x=16300 y=-6500 scale=4 -->
+
+<p><img src="http://i.imgur.com/7YISj2P.jpg" alt="hello-world" /></p>
+
+<h3 id="try-docker--docker-run-hello-world">Try <code>docker</code> / <code>docker run hello-world</code></h3>
+
+
+    </div>
+
+    <div class='step ' data-x='16300' data-y='-5500' data-scale='3' >
+      <!-- _S9SLIDE_  x=16300 y=-5500 scale=3 -->
+
+<h2 id="section-14">體驗一下它的威力</h2>
+
+<h4 id="docker-run--it-centos"><code>docker run -it centos</code></h4>
+
+<h4 id="docker-run--it-node"><code>docker run -it node</code></h4>
+
+<h4 id="docker-run-options-image-command"><code>docker run [options] &lt;image&gt; [command]</code></h4>
+
+<!-- === end markdown block === -->
+
+    </div>
+
+
+</div>
+
+<div id="loading">
+    <h1>DevOps & Docker with Nginx</h1>
+    <h3>PastLeo</h3>
+    <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg"><circle class="circle" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle></svg>
+</div>
+
+<div class="controls">
+    <div class="arrow prev"></div>
+    <div class="arrow next"></div>
+</div>
+
+<script src="http://netdna.impressjscdn.com/impressjs/0.5.3/js/impress.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+<script>
+    var impressInstance;
+    $(document).ready(function(){
+        impressInstance = impress();
+        impressInstance.init();
+        /*impressInstance.prev_ori = impressInstance.prev;*/
+        impressInstance.next_ori = impressInstance.next;
+        impressInstance.next = function(){
+            impressInstance.next_ori();
+            $("div.step.active").removeClass("future");
+        };
+        $(".controls .arrow.prev").click(impressInstance.prev);
+        $(".controls .arrow.next").click(impressInstance.next);
+        if(window.location.hash)
+            $("div#impress div.step" + window.location.hash.replace("#/","#")).prevAll().removeClass("future");
+        setTimeout(function(){
+            $('div#loading').addClass('done');
+            setTimeout(function(){
+                $('div#loading').remove();
+
+            },1000);
+        },2000);
+    });
+</script>
+
+</body>
+</html>
