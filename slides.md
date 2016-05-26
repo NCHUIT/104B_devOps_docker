@@ -424,10 +424,11 @@ services:
 
 ### 我們來用 docker 來跑 nginx 吧XDD
 
-1. [Nginx on dockerhub](https://hub.docker.com/_/nginx/)
-2. 先來個 one-off service 把 `conf.d` 複製出來
-3. 用 `volumes` 把 `conf.d` 內外打通
-4. `docker-compose up nginx`
+* [Nginx on dockerhub](https://hub.docker.com/_/nginx/)
+* 先來個 one-off service 把 `conf.d` 複製出來
+  * 測試 `conf.d` 是否正確的 one-off service `test`: `command: nginx -t`
+* 用 `volumes` 把 `conf.d` 內外打通
+* `docker-compose up nginx`
 
 %%%%%%%%%%%%%%%
 !SLIDE x=16300 y=4500 scale=4
@@ -439,7 +440,7 @@ services:
   * `listen <port> [default_server]`
   * `server_name <vhost_domain>`
   * `location` => `root`, `index`, `deny`
-* 寫一個測試用的 one-off service `test`: `command: nginx -t`
+* DNS (cloudflare / `/etc/hosts`) 把 domain 指向你的伺服器
 * `docker-compose up nginx`
 
 %%%%%%%%%%%%%%%
@@ -448,6 +449,7 @@ services:
 ### 把 chat / wordpress 跟 nginx 串在一起
 
 * 利用 `docker network` 以及 nginx 的 `reverse-proxy`
+* `restart: always`
 * [我們自己建立 network 讓 docker-compose 來使用](https://docs.docker.com/compose/networking/#using-a-pre-existing-network)
 * 繼續複製 `default.conf` 來改
 
