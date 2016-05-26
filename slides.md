@@ -110,11 +110,13 @@ ssh username@ip_or_hostname
 #### 把人加到群組裡面: `usermod -aG docker <user_name>`
 
 %%%%%%%%%%%%%%%
-!SLIDE picture center x=-7700 y=-5500 scale=4
+!SLIDE picture center x=-7700 y=-5750 scale=4
 
 ![funny-file-permission](http://i.imgur.com/upsemfw.jpg)
 
 ### 檔案權限
+
+##### `ls -l` => `drwxr-xr-x pastleo staff`
 
 %%%%%%%%%%%%%%%
 !SLIDE x=-7700 y=-4500 scale=3
@@ -126,9 +128,7 @@ ssh username@ip_or_hostname
 %%%%%%%%%%%%%%%
 !SLIDE x=-7700 y=-4000 scale=3
 
-## [誰可以做啥](http://linux.vbird.org/linux_basic/0210filepermission.php#chmod)
-
-#### `ls -l` => `drwxr-xr-x`
+## [可以做啥](http://linux.vbird.org/linux_basic/0210filepermission.php#chmod)
 
 #### `chmod [-Rv] <mod> <path>`
 
@@ -189,7 +189,7 @@ ssh username@ip_or_hostname
 
 #### `apt-get update`
 
-#### `apt-get cache search ...` (or google) / `apt-get instal ...`
+#### `apt-get cache search ...` (or google) / `apt-get install ...`
 
 #### `apt-get remove ...`
 
@@ -232,14 +232,14 @@ ssh username@ip_or_hostname
 #### Docker
 
 %%%%%%%%%%%%%%%
-!SLIDE center picture x=16300 y=-9500 scale=4
+!SLIDE center picture x=16300 y=-9000 scale=4
 
 ![docker-in-vm](http://i.imgur.com/cYCs6e0.jpg)
 
 ### Installation
 
 %%%%%%%%%%%%%%%
-!SLIDE x=16300 y=-8200 scale=3
+!SLIDE x=16300 y=-7700 scale=3
 
 ## [https://get.docker.com/](https://get.docker.com/)
 
@@ -248,14 +248,14 @@ ssh username@ip_or_hostname
 #### Docker 是 client-server 的，在 OSX 跟 Windows 上只有 client
 
 %%%%%%%%%%%%%%%
-!SLIDE center picture x=16300 y=-6500 scale=4
+!SLIDE center picture x=16300 y=-6000 scale=4
 
 ![hello-world](http://i.imgur.com/7YISj2P.jpg)
 
 ### Try `docker` / `docker run hello-world`
 
 %%%%%%%%%%%%%%%
-!SLIDE x=16300 y=-5300 scale=3
+!SLIDE x=16300 y=-4800 scale=3
 
 ### 體驗一下它的威力
 
@@ -268,42 +268,19 @@ ssh username@ip_or_hostname
 #### [DockerHub](https://hub.docker.com/explore/)
 
 %%%%%%%%%%%%%%%
-!SLIDE center x=7700 y=-9500 scale=4
+!SLIDE x=7700 y=-10000 scale=4
 
-![serious-pusheen](http://i.giphy.com/V2FgIJRv6Ykq4.gif)
-
-#### 來點認真的
-
-```
-git clone https://github.com/NCHUIT/104B_devOps_docker.git
-```
-
-#### 接下來各位會在 `practice` 內操作
+## 更多 docker 指令
 
 %%%%%%%%%%%%%%%
-!SLIDE x=7700 y=-8000 scale=3
-
-## 來架個 [聊天室 Chat](http://socket.io/demos/chat/)
-
-1. [Node on Dockerhub](https://hub.docker.com/_/node/) 
-2. 建立 `Dockerfile`, [Docs](https://docs.docker.com/engine/reference/builder/)
-3. `docker build -t chat .` (`docker build --help` to see more)
-4. `docker run -p 80:3000 chat`
-
-%%%%%%%%%%%%%%%
-!SLIDE x=7700 y=-6800 scale=4
-
-## 一些其他的 docker 指令
-
-%%%%%%%%%%%%%%%
-!SLIDE x=7700 y=-6500 scale=3
+!SLIDE x=7700 y=-9500 scale=3
 
 ## 看 Docker 是不是好的
 
 #### `docker info`
 
 %%%%%%%%%%%%%%%
-!SLIDE x=7700 y=-5500 scale=3
+!SLIDE x=7700 y=-8500 scale=3
 
 ### Containers / Image
 
@@ -318,13 +295,36 @@ git clone https://github.com/NCHUIT/104B_devOps_docker.git
     * `docker rmi <image>`
 
 %%%%%%%%%%%%%%%
-!SLIDE x=9000 y=-5500 scale=3
+!SLIDE x=9000 y=-8500 scale=3
 
 ### / Resource
 
 * resources:
     * `docker network ...`
     * `docker volume ...`
+
+%%%%%%%%%%%%%%%
+!SLIDE picture center x=7700 y=-6250 scale=3
+
+![serious-pusheen](http://i.giphy.com/V2FgIJRv6Ykq4.gif)
+
+#### 來點認真的
+
+```
+git clone https://github.com/NCHUIT/104B_devOps_docker.git
+```
+
+#### 接下來各位會在 `practice` 內操作
+
+%%%%%%%%%%%%%%%
+!SLIDE x=7700 y=-5000 scale=3
+
+## 來架個 [聊天室 Chat](http://socket.io/demos/chat/)
+
+1. [Node on Dockerhub](https://hub.docker.com/_/node/) 
+2. 建立 `Dockerfile`, [Docs](https://docs.docker.com/engine/reference/builder/)
+3. `docker build -t chat .` (`docker build --help` to see more)
+4. `docker run -p 80:3000 chat`
 
 %%%%%%%%%%%%%%%
 !SLIDE unclickable x=12000 y=-7000 scale=10
@@ -348,6 +348,18 @@ git clone https://github.com/NCHUIT/104B_devOps_docker.git
 %%%%%%%%%%%%%%%
 !SLIDE x=-7700 y=1750 scale=3
 
+### Docker-compose 大致使用流程
+
+1. 撰寫 `docker-compose.yml`
+2. `docker-compose config`, 確保 `docker-compose.yml` 是好der
+3. `build`
+4. `up [service]` / `run <service>`
+5. `logs`
+6. `ps` / `kill [service]` / `rm [-avf]`
+
+%%%%%%%%%%%%%%%
+!SLIDE x=-7700 y=4000 scale=3
+
 ### 讓 Chat 更容易地使用吧
 
 #### 建立 `docker-compose.yml`, 要用就用新版吧 (2):
@@ -362,17 +374,6 @@ services:
 #### [頗多頗複雜的文件](https://docs.docker.com/compose/compose-file/)
 
 #### `docker-compose up chat`
-
-%%%%%%%%%%%%%%%
-!SLIDE x=-7700 y=4000 scale=3
-
-### Docker-compose 大致使用流程
-
-1. `docker-compose config`, 確保 `docker-compose.yml` 是好der
-2. `build`
-3. `up [service]` / `run <service>`
-4. `logs`
-5. `ps` / `kill [service]` / `rm [-avf]`
 
 %%%%%%%%%%%%%%%
 !SLIDE center picture x=-16300 y=1500 scale=4
@@ -393,18 +394,18 @@ services:
 %%%%%%%%%%%%%%%
 !SLIDE x=-16300 y=3000 scale=3
 
+## `command` / `entrypoint` 差異
+
+#### `docker-compose run <service> [command_or_args]` 的 `[command_or_args]` 會接在 `entrypoint` 之後
+
+%%%%%%%%%%%%%%%
+!SLIDE x=-16300 y=3900 scale=3
+
 ## 來做個資料庫備份吧
 
 #### 直接在 `docker-compose` 裡頭加上兩個 one-off command service
 
 #### 需要把 container 跟 host 檔案系統打通，透過 `volumes`
-
-%%%%%%%%%%%%%%%
-!SLIDE x=-16300 y=3900 scale=3
-
-## `command` / `entrypoint` 差異
-
-#### `docker-compose run <service> [command_or_args]` 的 `[command_or_args]` 會接在 `entrypoint` 之後
 
 %%%%%%%%%%%%%%%
 !SLIDE unclickable x=-12000 y=3000 scale=10
