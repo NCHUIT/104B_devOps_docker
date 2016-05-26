@@ -12,6 +12,7 @@ services:
     networks:
     - vhosts
     - default
+    restart: always
   mysql:
     image: mariadb
     env_file: secrets.env
