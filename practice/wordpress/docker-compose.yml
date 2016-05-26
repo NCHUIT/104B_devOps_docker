@@ -16,21 +16,23 @@ services:
     image: mariadb
     env_file: secrets.env
   dump: &dump_restore
-    image: mariadb
+    build:
+      context: .
+      dockerfile: dump_restore.Dockerfile
     depends_on:
      - mysql
     env_file: secrets.env
     volumes:
      - .:/tmp
-    command: 
-     - bash
-     - -c
-     - mysqldump --host mysql --password=$$MYSQL_ROOT_PASSWORD wordpress > /tmp/dump.sql
+    entrypoint: 
+     - /usr/local/bin/dump_restore
+     - dump
+    command:
+     - wordpress
   restore:
     <<: *dump_restore
-    command: 
-     - bash
-     - -c
-     - mysql --host mysql --password=$$MYSQL_ROOT_PASSWORD --database=wordpress < /tmp/dump.sql
-
+    entrypoint: 
+     - /usr/local/bin/dump_restore
+     - restore
+    command: []
 
